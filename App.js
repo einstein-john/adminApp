@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createStore } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
+import WelcomeScreen from './welcomeScreen';
+
+
 
 // Redux actions
 const LOGIN = 'LOGIN';
@@ -31,32 +34,40 @@ const reducer = (state = initialState, action) => {
 const store = createStore(reducer);
 
 // Screens
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const handleLogin = () => {
-    store.dispatch({ type: LOGIN, payload: username });
+    if (username === 'admin' && password === 'password') {
+      dispatch({ type: LOGIN, payload: username });
+      navigation.navigate('Welcome', { username });
+    } else {
+      console.log('Invalid login');
+    }
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Admin Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
       <TextInput
+        style={styles.input}
         placeholder="Username"
-        style={{ width: 200, height: 40, borderWidth: 1, marginBottom: 10 }}
+        value={username}
         onChangeText={setUsername}
       />
-      <Button title="Login" onPress={handleLogin} />
-    </View>
-  );
-};
-
-const DashboardScreen = () => {
-  const { username } = store.getState();
-
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24 }}>Welcome, {username}!</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -69,15 +80,43 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          {store.getState().isLoggedIn ? (
-            <Stack.Screen name="Dashboard" component={DashboardScreen} />
-          ) : (
-            <Stack.Screen name="Login" component={LoginScreen} />
-          )}
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom:20,
+  },
+  input: {
+    width: 200,
+    height: 40,
+    borderWidth: 1,
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+  },
+  button: {
+    backgroundColor: 'black',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+});
 
 export default App;

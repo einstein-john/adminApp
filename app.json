@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "adminApp",
-    "slug": "adminApp",
+    "slug": "adminapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9588e439-2c27-48db-834a-0be1119a0ed3"
+      }
+    },
+    "owner": "johneinstein_1"
   }
 }

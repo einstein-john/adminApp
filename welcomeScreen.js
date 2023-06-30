@@ -31,7 +31,7 @@ const WelcomeScreen = () => {
     const timeout = setTimeout(() => {
       dispatch({ type: 'LOGIN', payload: '' });
       navigation.navigate('AdminDashboard');
-    }, 3000); // Adjust the duration as per your requirement (in milliseconds)
+    }, 1000); // Adjust the duration as per your requirement (in milliseconds)
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 

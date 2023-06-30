@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import Line from './line';
 
 const AdminDashboard = () => {
+  const navigation = useNavigation();
+  const [successfulScans, setSuccessfulScans] = useState(0);
+  const [unsuccessfulScans, setUnsuccessfulScans] = useState(0);
+
+  const totalScans = successfulScans + unsuccessfulScans;
+
+  const handleSuccessfulScan = () => {
+    setSuccessfulScans(successfulScans + 1);
+  };
+
+  const handleUnsuccessfulScan = () => {
+    setUnsuccessfulScans(unsuccessfulScans + 1);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Admin Dashboard</Text>
-      <Text style={styles.subtitle}>Welcome, Admin!</Text>
+      <Text style={styles.subtitle}>Welcome!</Text>
 
       {/* Dashboard Components */}
-     
+
       <Text style={styles.smallText}>Scans</Text>
       <Line />
 
@@ -17,37 +33,36 @@ const AdminDashboard = () => {
         <View style={styles.row}>
           <View style={styles.componentContainer}>
             <Text style={styles.componentTitle}>Successful</Text>
-            <Text style={styles.componentValue}>1,234</Text>
+            <Text style={styles.componentValue}>{successfulScans}</Text>
           </View>
         </View>
 
         <View style={styles.row}>
           <View style={styles.componentContainer}>
             <Text style={styles.componentTitle}>Unsuccessful</Text>
-            <Text style={styles.componentValue}>567</Text>
+            <Text style={styles.componentValue}>{unsuccessfulScans}</Text>
           </View>
         </View>
       </View>
 
       <View style={styles.componentContainer}>
-            <Text style={styles.componentTitle}>Total</Text>
-            <Text style={styles.componentValue}>567</Text>
-          </View>
+        <Text style={styles.componentTitle}>Total</Text>
+        <Text style={styles.componentValue}>{totalScans}</Text>
+      </View>
 
-
-          <Text style={styles.smallText}>Controls</Text>
+      <Text style={styles.smallText}>Controls</Text>
       <Line />
 
       <View style={styles.rowContainer}>
         <View style={styles.row}>
-          <TouchableOpacity style={styles.buttonModRed}>
-            <Text style={styles.componentTitle}>STOP</Text>
+          <TouchableOpacity style={styles.buttonModRed} onPress={handleUnsuccessfulScan}>
+            <Ionicons name="md-square" size={32} color="white" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity style={styles.buttonModGreen}>
-            <Text style={styles.componentTitle}>GO</Text>
+          <TouchableOpacity style={styles.buttonModGreen} onPress={handleSuccessfulScan}>
+            <Ionicons name="md-checkmark-circle" size={32} color="white" />
           </TouchableOpacity>
         </View>
       </View>
@@ -77,11 +92,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    alignContent: 'center',
   },
   row: {
     flex: 1,
     width: '50%',
-    margin:10,
+    margin: 10,
   },
   componentContainer: {
     backgroundColor: '#fff',
@@ -100,27 +116,29 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  smallText:{
-    fontSize:14,
-    color:'grey',
-    marginRight:"auto",
-    marginLeft:15,
+  smallText: {
+    fontSize: 14,
+    color: 'grey',
+    marginRight: 'auto',
+    marginLeft: 15,
   },
-  buttonModRed:{
+  buttonModRed: {
     backgroundColor: 'red',
-    borderRadius: 10,
+    borderRadius: 100,
     padding: 20,
     marginBottom: 20,
-    width: '100%',
+    width: '70%',
     alignItems: 'center',
+    marginLeft: 22,
   },
-  buttonModGreen:{
+  buttonModGreen: {
     backgroundColor: 'green',
-    borderRadius: 10,
+    borderRadius: 100,
     padding: 20,
     marginBottom: 20,
-    width: '100%',
+    width: '70%',
     alignItems: 'center',
+    marginLeft: 22,
   },
 });
 

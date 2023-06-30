@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, Alert, BackHandler } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
 
 const WelcomeScreen = () => {
   const username = useSelector((state) => state.username);
@@ -28,12 +27,20 @@ const WelcomeScreen = () => {
       );
       return true; // Return true to prevent the default back button action
     };
-  
+
+    const timeout = setTimeout(() => {
+      dispatch({ type: 'LOGIN', payload: '' });
+      navigation.navigate('AdminDashboard');
+    }, 3000); // Adjust the duration as per your requirement (in milliseconds)
+
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-  
-    return () => backHandler.remove();
+
+    return () => {
+      clearTimeout(timeout);
+      backHandler.remove();
+    };
   }, []);
-  
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24 }}>Welcome, {username}!</Text>

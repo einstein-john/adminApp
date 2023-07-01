@@ -6,6 +6,8 @@ import { createStore } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
 import WelcomeScreen from './welcomeScreen';
 import AdminDashboard from './dashboard';
+import newLuggage from './newLuggage';
+import { saveData} from './storage';
 
 // Redux actions
 const LOGIN = 'LOGIN';
@@ -42,6 +44,7 @@ const LoginScreen = () => {
   const handleLogin = () => {
     if (username === 'admin' && password === 'password') {
       dispatch({ type: LOGIN, payload: username });
+      saveData('username', username); 
       navigation.navigate('Welcome', { username });
     } else {
       console.log('Invalid login');
@@ -49,7 +52,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}>                                                                                                          
       <ImageBackground source={require('./assets/loginBG.jpg')} style={styles.imageBackground}>
        <View style={styles.content}>
       
@@ -99,6 +102,7 @@ const App = () => {
           />
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+          <Stack.Screen name="NewLuggageScreen" component={newLuggage} />
 
         </Stack.Navigator>
       </NavigationContainer>

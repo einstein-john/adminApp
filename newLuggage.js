@@ -5,10 +5,7 @@ const NewLuggageScreen = ({ navigation }) => {
   const [luggageName, setLuggageName] = useState('');
 
   const handleCreateLuggage = () => {
-    // Logic for creating new luggage goes here
-    // You can use the "luggageName" state variable to access the entered luggage name
-
-    // Once the luggage is created, you can navigate back to the previous screen
+   
     navigation.goBack();
   };
 

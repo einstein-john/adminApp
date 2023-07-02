@@ -1,24 +1,68 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import Barcode from './components/barcode';
 
-const NewLuggageScreen = ({ navigation }) => {
-  const [luggageName, setLuggageName] = useState('');
+const NewLuggageScreen = () => {
+  const [name, setName] = useState('');
+  const [weight, setWeight] = useState('');
+  const [destination, setDestination] = useState('');
+  const [description, setDescription] = useState('');
+  const [luggageId, setLuggageId] = useState('');
 
-  const handleCreateLuggage = () => {
-   
-    navigation.goBack();
-  };
+  useEffect(() => {
+    if (name && weight && destination && description) {
+      const formattedDestination = destination.toLowerCase().replace(/\s/g, '-');
+      const generatedLuggageId = `${formattedDestination}-${Math.floor(Math.random() * 10000)}`;
+      setLuggageId(generatedLuggageId);
+    } else {
+      setLuggageId('');
+    }
+  }, [name, weight, destination, description]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create New Luggage</Text>
+
       <TextInput
         style={styles.input}
-        placeholder="Enter luggage name"
-        value={luggageName}
-        onChangeText={setLuggageName}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
       />
-      <Button title="Create" onPress={handleCreateLuggage} />
+      <TextInput
+        style={styles.input}
+        placeholder="Weight in kg"
+        value={weight}
+        onChangeText={setWeight}
+        keyboardType="numeric"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter the luggage Destination"
+        value={destination}
+        onChangeText={setDestination}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter the luggage Description"
+        value={description}
+        onChangeText={setDescription}
+      />
+
+      {luggageId ? (
+        // <Text style={styles.generatedIdText}>Luggage ID: {luggageId}</Text>
+        <Barcode
+        value={luggageId}
+        options={{ format: 'CODE128', background: 'pink' }}
+        rotation={5}
+      />
+      ) : null}
+
+<TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Save </Text>
+      </TouchableOpacity>
+
+      
     </View>
   );
 };
@@ -41,6 +85,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
+    borderRadius: 10,
+  },
+  generatedIdText: {
+    fontSize: 18,
+    marginTop: 20,
+  },
+  button: {
+    width: '40%',
+    backgroundColor: 'black',
+    alignItems: 'center',
+    borderRadius: 10,
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    fontSize: 20,
+    margin: 10,
+    color: '#fff',
   },
 });
 

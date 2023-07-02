@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { captureRef } from 'react-native-view-shot';
+import { ImageManipulator, MediaLibrary } from 'expo';
 import Barcode from './components/barcode';
 
 const NewLuggageScreen = () => {
@@ -8,6 +10,7 @@ const NewLuggageScreen = () => {
   const [destination, setDestination] = useState('');
   const [description, setDescription] = useState('');
   const [luggageId, setLuggageId] = useState('');
+  const barcodeRef = useRef(null);
 
   useEffect(() => {
     if (name && weight && destination && description) {
@@ -18,6 +21,28 @@ const NewLuggageScreen = () => {
       setLuggageId('');
     }
   }, [name, weight, destination, description]);
+
+  const saveBarcodeImage = async () => {
+    try {
+      const barcodeUri = await captureRef(barcodeRef, {
+        format: 'jpg',
+        quality: 1,
+      });
+
+      const savedImage = await ImageManipulator.manipulateAsync(
+        barcodeUri,
+        [{ resize: { width: 300 } }],
+        { format: 'jpg', compress: 0.8 }
+      );
+
+      const asset = await MediaLibrary.createAssetAsync(savedImage.uri);
+      await MediaLibrary.createAlbumAsync('Luggage Barcodes', asset, false);
+      alert('Barcode image saved successfully!');
+    } catch (error) {
+      alert('Failed to save barcode image');
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -50,19 +75,18 @@ const NewLuggageScreen = () => {
       />
 
       {luggageId ? (
-        // <Text style={styles.generatedIdText}>Luggage ID: {luggageId}</Text>
-        <Barcode
-        value={luggageId}
-        options={{ format: 'CODE39', background: 'pink' }}
-        rotation={5}
-      />
+        <View ref={barcodeRef}>
+          <Barcode
+            value={luggageId}
+            options={{ format: 'CODE128', background: 'pink' }}
+            rotation={5}
+          />
+        </View>
       ) : null}
 
-<TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Save </Text>
+      <TouchableOpacity style={styles.button} onPress={saveBarcodeImage}>
+        <Text style={styles.buttonText}>Save Barcode</Text>
       </TouchableOpacity>
-
-      
     </View>
   );
 };
@@ -86,10 +110,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     borderRadius: 10,
-  },
-  generatedIdText: {
-    fontSize: 18,
-    marginTop: 20,
   },
   button: {
     width: '40%',

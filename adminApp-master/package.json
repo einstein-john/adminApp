@@ -27,7 +27,10 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
     "react-redux": "^7.2.9",
-    "redux": "^4.2.1"
+    "redux": "^4.2.1",
+    "expo-media-library": "~14.2.0",
+    "expo-image-manipulator": "~10.4.0",
+    "react-native-view-shot": "3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

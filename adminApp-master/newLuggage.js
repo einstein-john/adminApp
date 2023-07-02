@@ -53,7 +53,7 @@ const NewLuggageScreen = () => {
         // <Text style={styles.generatedIdText}>Luggage ID: {luggageId}</Text>
         <Barcode
         value={luggageId}
-        options={{ format: 'CODE128', background: 'pink' }}
+        options={{ format: 'CODE39', background: 'pink' }}
         rotation={5}
       />
       ) : null}

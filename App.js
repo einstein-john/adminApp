@@ -185,13 +185,6 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-// import {
-//   HomeScreen,
-//   LoginScreen,
-//   SignUpScreen,
-//   WelcomeScreen,
-// } from "./screens";
-
 import HomeSreen from "./screens/HomeSreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import LoginScreen from "./screens/LoginScreen";

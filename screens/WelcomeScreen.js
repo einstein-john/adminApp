@@ -1,13 +1,21 @@
 import { View, Text } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context'
+
 import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function WelcomeScreen() {
   return (
-      <SafeAreaView className="flex-1" style={{ backgroundColor:red }}
-          <View className"flex-1" >
-              <Text>hh</Text>
-          </View>
-        </SafeAreaView>
+    <SafeAreaView
+      className="flex-1"
+      style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", marginBottom: 50 }}
+    >
+      <View
+        style={{
+          paddingBottom: 5,
+        }}
+      >
+        <Text>ffsdsfshdfkdhflisdfgidsgfisudfuidghh</Text>
+      </View>
+    </SafeAreaView>
   );
 }

@@ -6,7 +6,9 @@ import WelcomeScreen from "./WelcomeScreen";
 export default function HomeSreen() {
   return (
     <SafeAreaView>
-      <WelcomeScreen />
+      <View>
+        <Text>Hey</Text>
+      </View>
     </SafeAreaView>
   );
 }

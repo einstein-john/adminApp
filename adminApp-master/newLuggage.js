@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
-import { ImageManipulator, MediaLibrary } from 'expo';
 import Barcode from './components/barcode';
+import { GLView } from 'expo-gl';
 
 const NewLuggageScreen = () => {
   const [name, setName] = useState('');
@@ -10,11 +10,18 @@ const NewLuggageScreen = () => {
   const [destination, setDestination] = useState('');
   const [description, setDescription] = useState('');
   const [luggageId, setLuggageId] = useState('');
+  const [error, setError] = useState('');
+
   const barcodeRef = useRef(null);
 
   useEffect(() => {
+    
     if (name && weight && destination && description) {
-      const formattedDestination = destination.toLowerCase().replace(/\s/g, '-');
+      if (!isNumber(weight)) {
+      setError('Weight must be a number');
+      return;
+    }
+    const formattedDestination = destination.toLowerCase().replace(/\s/g, '-');
       const generatedLuggageId = `${formattedDestination}-${Math.floor(Math.random() * 10000)}`;
       setLuggageId(generatedLuggageId);
     } else {
@@ -24,24 +31,33 @@ const NewLuggageScreen = () => {
 
   const saveBarcodeImage = async () => {
     try {
-      const barcodeUri = await captureRef(barcodeRef, {
-        format: 'jpg',
-        quality: 1,
-      });
-
-      const savedImage = await ImageManipulator.manipulateAsync(
-        barcodeUri,
-        [{ resize: { width: 300 } }],
-        { format: 'jpg', compress: 0.8 }
-      );
-
-      const asset = await MediaLibrary.createAssetAsync(savedImage.uri);
-      await MediaLibrary.createAlbumAsync('Luggage Barcodes', asset, false);
-      alert('Barcode image saved successfully!');
+      if (barcodeRef.current) {
+        const uri = await captureRef(barcodeRef, {
+          format: 'png',
+          quality: 1,
+        });
+  
+        const savedImage = await ImageManipulator.manipulateAsync(
+          uri,
+          [{ resize: { width: 300 } }],
+          { format: 'png', compress: 0.8 }
+        );
+  
+        const asset = await MediaLibrary.createAssetAsync(savedImage.uri);
+        await MediaLibrary.createAlbumAsync('Luggage Barcodes', asset, false);
+        alert('Barcode image saved successfully!');
+      } else {
+        alert('Barcode ref is not available.');
+      }
     } catch (error) {
       alert('Failed to save barcode image');
       console.log(error);
     }
+  };
+  
+
+  const isNumber = (value) => {
+    return !isNaN(parseFloat(value)) && isFinite(value);
   };
 
   return (
@@ -61,6 +77,7 @@ const NewLuggageScreen = () => {
         onChangeText={setWeight}
         keyboardType="numeric"
       />
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Enter the luggage Destination"
@@ -78,7 +95,7 @@ const NewLuggageScreen = () => {
         <View ref={barcodeRef}>
           <Barcode
             value={luggageId}
-            options={{ format: 'CODE128', background: 'pink' }}
+            options={{ format: 'CODE39', background: 'pink' }}
             rotation={5}
           />
         </View>
@@ -123,6 +140,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 10,
     color: '#fff',
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
   },
 });
 
